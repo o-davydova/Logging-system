@@ -1,25 +1,24 @@
-#include <iostream>
+#include <chrono>
 #include <fstream>
+#include <iostream>
 #include <string>
-#include <ctime>
-#include <cstring>
-
 #ifdef _WIN32
-#include <winsock2.h>
 #include <ws2tcpip.h>
+#include <winsock2.h>
 #pragma comment(lib, "Ws2_32.lib")
 #else
+#include <arpa/inet.h>
 #include <netinet/in.h>
 #include <unistd.h>
-#include <arpa/inet.h>
 #endif
 
-#define PORT 8080
-#define LOG_FILE "server_logs.txt"
+constexpr int port = 8080;
+constexpr const char* log_file = "server_logs.txt";
+
 
 void logMessage(const std::string& message, bool writeToConsole, bool writeToFile) {
     if (writeToFile) {
-        std::ofstream logFile(LOG_FILE, std::ios_base::app);
+        std::ofstream logFile(log_file, std::ios_base::app);
         if (!logFile.is_open()) {
             std::cerr << "Unable to open log file" << std::endl;
             return;
@@ -69,8 +68,14 @@ int main() {
         WSACleanup();
         exit(EXIT_FAILURE);
     }
+#elif defined(__APPLE__) || defined(__MACH__)
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0) {
+        perror("setsockopt");
+        close(server_fd);
+        exit(EXIT_FAILURE);
+    }
 #else
-    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)) < 0) {
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEport, &opt, sizeof(opt)) < 0) {
         perror("setsockopt");
         close(server_fd);
         exit(EXIT_FAILURE);
@@ -79,7 +84,7 @@ int main() {
 
     address.sin_family = AF_INET;
     address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(PORT);
+    address.sin_port = htons(port);
 
     if (bind(server_fd, (struct sockaddr*)&address, sizeof(address)) < 0) {
 #ifdef _WIN32
@@ -104,7 +109,7 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    std::cout << "Logging server is listening on port " << PORT << std::endl;
+    std::cout << "Logging server is listening on port " << port << std::endl;
 
     while (true) {
         int new_socket;
