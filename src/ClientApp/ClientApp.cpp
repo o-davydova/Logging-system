@@ -1,15 +1,31 @@
-#include "LoggingLibrary.h"
+#include <LoggingLibrary.hpp>
+#include <string>
 
 int main() {
     std::string client = "Internet Heroes";
-  
-    // Встановлення налаштувань виводу
-    LoggingLibrary::setLogOutput(LoggingLibrary::CONSOLE);  // Змінити на LoggingLibrary::CONSOLE або LoggingLibrary::FILE при необхідності
+    // Uncomment and set the desired log output
+    // LoggingLibrary::setLogOutput(LoggingLibrary::CONSOLE);  // or LoggingLibrary::FILE
 
-    // Логування повідомлення
-    LoggingLibrary::logMessage("This is an info message", LoggingLibrary::INFO_LOG, client);
-    LoggingLibrary::logMessage("This is a warning message", LoggingLibrary::WARNING_LOG, client);
-    LoggingLibrary::logMessage("This is an error message", LoggingLibrary::ERROR_LOG, client);
+    // Log messages with different levels
+    LoggingLibrary::logMessage("System startup complete", LogLevel::INFO_LOG, client);
+    LoggingLibrary::logMessage("User 'John Doe' logged in", LogLevel::INFO_LOG, client);
+    LoggingLibrary::logMessage("Configuration file loaded successfully", LogLevel::INFO_LOG, client);
+    LoggingLibrary::logMessage("Potential security risk detected", LogLevel::WARNING_LOG, client);
+    LoggingLibrary::logMessage("Disk space running low on drive C:", LogLevel::WARNING_LOG, client);
+    LoggingLibrary::logMessage("High memory usage detected", LogLevel::WARNING_LOG, client);
+    LoggingLibrary::logMessage("Failed to connect to database", LogLevel::ERROR_LOG, client);
+    LoggingLibrary::logMessage("Critical error: application crashed", LogLevel::ERROR_LOG, client);
+    LoggingLibrary::logMessage("Unauthorized access attempt detected", LogLevel::ERROR_LOG, client);
+    LoggingLibrary::logMessage("Background process completed successfully", LogLevel::INFO_LOG, client);
+    LoggingLibrary::logMessage("Network latency detected", LogLevel::WARNING_LOG, client);
+    LoggingLibrary::logMessage("File not found: /path/to/file.txt", LogLevel::ERROR_LOG, client);
+    LoggingLibrary::logMessage("Update available for application", LogLevel::INFO_LOG, client);
+    LoggingLibrary::logMessage("Temporary file deleted", LogLevel::INFO_LOG, client);
+    LoggingLibrary::logMessage("New user 'Alice' created", LogLevel::INFO_LOG, client);
+    LoggingLibrary::logMessage("Unexpected input detected", LogLevel::WARNING_LOG, client);
+    LoggingLibrary::logMessage("Permission denied for resource access", LogLevel::ERROR_LOG, client);
+    LoggingLibrary::logMessage("Backup completed successfully", LogLevel::INFO_LOG, client);
+
 
     return 0;
 }
